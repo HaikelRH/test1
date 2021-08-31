@@ -1,0 +1,33 @@
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+name: cluster
+spec:
+identityProviders:
+- name: ActiveDirectory
+mappingMethod: claim
+type: LDAP
+ldap:
+attributes:
+id:
+- dn
+email:
+- mail
+name:
+- cn
+preferredUsername:
+- sAMAccountName
+bindDN: "cn=SCBRoot,ou=Service Account,ou=IT,dc=scb,dc=Local"
+bindPassword:
+name: ldap-secret
+insecure: true
+url:
+'ldap://172.18.3.20:389/dc=scb,dc=local?sAMAccountName?sub?(|(memberOf=cn=openshift
+-admins,ou=openshift,dc=scb,dc=local)(memberOf=cn=openshift-users,ou=openshift,dc=scb
+,dc=local))'
+- name: breakglass
+mappingMethod: claim
+type: HTPasswd
+htpasswd:
+fileData:
+name: htpass-secret
